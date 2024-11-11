@@ -1,20 +1,6 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
 
-const theme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#646cff",
-      dark: "#535bf2",
-    },
-    background: {
-      default: "#242424",
-      paper: "#1a1a1a",
-    },
-    text: {
-      primary: "rgba(255, 255, 255, 0.87)",
-    },
-  },
+const commonThemeSettings: ThemeOptions = {
   typography: {
     fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
     h1: {
@@ -24,7 +10,6 @@ const theme = createTheme({
     button: {
       fontSize: "1rem",
       fontWeight: 500,
-      textTransform: "none",
     },
   },
   components: {
@@ -34,7 +19,6 @@ const theme = createTheme({
           borderRadius: "8px",
           padding: "0.6em 1.2em",
           border: "1px solid transparent",
-          backgroundColor: "#1a1a1a",
           "&:hover": {
             borderColor: "#646cff",
           },
@@ -45,7 +29,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 500,
-          color: "#646cff",
           "&:hover": {
             color: "#535bf2",
           },
@@ -53,6 +36,40 @@ const theme = createTheme({
       },
     },
   },
+};
+
+export const lightTheme = createTheme({
+  ...commonThemeSettings,
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#646cff",
+      dark: "#535bf2",
+    },
+    background: {
+      default: "#ffffff",
+      paper: "#f9f9f9",
+    },
+    text: {
+      primary: "#213547",
+    },
+  },
 });
 
-export default theme;
+export const darkTheme = createTheme({
+  ...commonThemeSettings,
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#646cff",
+      dark: "#535bf2",
+    },
+    background: {
+      default: "#121212",
+      paper: "#1e1e1e",
+    },
+    text: {
+      primary: "rgba(255, 255, 255, 0.87)",
+    },
+  },
+});

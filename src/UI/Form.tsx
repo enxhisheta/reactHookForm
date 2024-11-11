@@ -1,35 +1,92 @@
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { TextField, Button, MenuItem, Box, Typography } from "@mui/material";
+import { useState, FormEvent, ChangeEvent } from "react";
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Box,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 
 type BookingInputs = {
   name: string;
   email: string;
+  phone: string;
+  passportNumber: string;
   destination: string;
   travelers: number;
   date: string;
+  specialRequests: string;
+  agreeToTerms: boolean;
 };
 
 const Form: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BookingInputs>();
+  const [formData, setFormData] = useState<BookingInputs>({
+    name: "",
+    email: "",
+    phone: "",
+    passportNumber: "",
+    destination: "",
+    travelers: 1,
+    date: "",
+    specialRequests: "",
+    agreeToTerms: false,
+  });
 
-  const onSubmit: SubmitHandler<BookingInputs> = (data) => {
-    console.log(data);
+  const [errors, setErrors] = useState<Partial<BookingInputs>>({});
+
+  const validateForm = () => {
+    const newErrors: Partial<BookingInputs> = {};
+
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (
+      !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(formData.email)
+    ) {
+      newErrors.email = "Enter a valid email address";
+    }
+    if (!formData.phone) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9]{10,15}$/.test(formData.phone)) {
+      newErrors.phone = "Enter a valid phone number";
+    }
+    if (!formData.passportNumber)
+      newErrors.passportNumber = "Passport number is required";
+    if (!formData.destination)
+      newErrors.destination = "Please select a destination";
+    if (!formData.date) newErrors.date = "Please select a travel date";
+    if (!formData.agreeToTerms) newErrors.agreeToTerms = false;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log(formData);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       sx={{
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        maxWidth: 400,
+        maxWidth: 500,
         mx: "auto",
         mt: 4,
       }}
@@ -39,64 +96,112 @@ const Form: React.FC = () => {
       </Typography>
 
       <TextField
+        name="name"
         label="Name"
         variant="outlined"
-        {...register("name", { required: "Name is required" })}
+        value={formData.name}
+        onChange={handleChange}
         error={!!errors.name}
-        helperText={errors.name?.message}
+        helperText={errors.name}
       />
 
       <TextField
+        name="email"
         label="Email"
         variant="outlined"
-        {...register("email", {
-          required: "Email is required",
-          pattern: {
-            value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-            message: "Enter a valid email address",
-          },
-        })}
+        value={formData.email}
+        onChange={handleChange}
         error={!!errors.email}
-        helperText={errors.email?.message}
+        helperText={errors.email}
       />
 
       <TextField
+        name="phone"
+        label="Phone Number"
+        variant="outlined"
+        value={formData.phone}
+        onChange={handleChange}
+        error={!!errors.phone}
+        helperText={errors.phone}
+      />
+
+      <TextField
+        name="passportNumber"
+        label="Passport Number"
+        variant="outlined"
+        value={formData.passportNumber}
+        onChange={handleChange}
+        error={!!errors.passportNumber}
+        helperText={errors.passportNumber}
+      />
+
+      <TextField
+        name="destination"
         label="Destination"
         select
         variant="outlined"
-        defaultValue=""
-        {...register("destination", {
-          required: "Please select a destination",
-        })}
+        value={formData.destination}
+        onChange={handleChange}
         error={!!errors.destination}
-        helperText={errors.destination?.message}
+        helperText={errors.destination}
       >
         <MenuItem value="cairo">Cairo</MenuItem>
-        <MenuItem value="jordan">Jordan</MenuItem>
+        <MenuItem value="tokyo">Tokyo</MenuItem>
+        <MenuItem value="new_york">New York</MenuItem>
+        <MenuItem value="sydney">Sydney</MenuItem>
         <MenuItem value="san_francisco">San Francisco</MenuItem>
       </TextField>
 
       <TextField
+        name="travelers"
         label="Number of Travelers"
         type="number"
         variant="outlined"
-        {...register("travelers", {
-          required: "Please specify the number of travelers",
-          min: { value: 1, message: "Must be at least 1 traveler" },
-        })}
+        value={formData.travelers}
+        onChange={handleChange}
         error={!!errors.travelers}
-        helperText={errors.travelers?.message}
+        helperText={errors.travelers}
       />
 
       <TextField
+        name="date"
         label="Travel Date"
         type="date"
         variant="outlined"
-        InputLabelProps={{ shrink: true }}
-        {...register("date", { required: "Please select a travel date" })}
+        slotProps={{
+          inputLabel: { shrink: true },
+        }}
+        value={formData.date}
+        onChange={handleChange}
         error={!!errors.date}
-        helperText={errors.date?.message}
+        helperText={errors.date}
       />
+
+      <TextField
+        name="specialRequests"
+        label="Special Requests"
+        variant="outlined"
+        multiline
+        rows={3}
+        value={formData.specialRequests}
+        onChange={handleChange}
+      />
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="agreeToTerms"
+            checked={formData.agreeToTerms}
+            onChange={handleChange}
+          />
+        }
+        label="I agree to the terms and conditions"
+      />
+      {errors.agreeToTerms && (
+        <Typography variant="caption" color="error">
+          {errors.agreeToTerms}
+        </Typography>
+      )}
 
       <Button type="submit" variant="contained" color="primary">
         Submit Booking
