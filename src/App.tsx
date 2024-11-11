@@ -1,6 +1,14 @@
+import Layout from "./UI/Layout";
+import Form from "./UI/Form";
 
-function App() {
-  return <></>;
-}
+const App: React.FC = () => {
+  return (
+    <div>
+      <Layout>
+        <Form />
+      </Layout>
+    </div>
+  );
+};
 
 export default App;
