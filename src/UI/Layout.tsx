@@ -10,7 +10,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box className="layout-container">
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">My App</Typography>
+          <Typography variant="h6">My Agency</Typography>
         </Toolbar>
       </AppBar>
 
