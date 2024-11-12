@@ -24,6 +24,7 @@ type BookingInputs = {
   specialRequests: string;
   agreeToTerms: boolean;
   fareType: string;
+  phonePrefix: string;
 };
 
 const Form: React.FC = () => {
@@ -48,6 +49,7 @@ const Form: React.FC = () => {
       specialRequests: "",
       agreeToTerms: false,
       fareType: "regular",
+      phonePrefix: "",
     },
   });
 
@@ -61,6 +63,15 @@ const Form: React.FC = () => {
   const handleFareTypeChange = (fareType: string) => {
     setValue("fareType", fareType);
   };
+
+  const phoneCountries = [
+    { code: "US", prefix: "+1", label: "United States" },
+    { code: "UK", prefix: "+44", label: "United Kingdom" },
+    { code: "FR", prefix: "+33", label: "France" },
+    { code: "DE", prefix: "+49", label: "Germany" },
+    { code: "IT", prefix: "+39", label: "Italy" },
+    { code: "ES", prefix: "+34", label: "Spain" },
+  ];
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -104,7 +115,6 @@ const Form: React.FC = () => {
         <TextField
           {...register("name", {
             required: "Name is required",
-            minLength: { value: 8, message: "Enter at least 8 characters" },
           })}
           label="Name"
           variant="outlined"
@@ -134,19 +144,36 @@ const Form: React.FC = () => {
           helperText={errors.email?.message}
         />
 
-        <TextField
-          {...register("phone", {
-            required: "Phone number is required",
-            pattern: {
-              value: /^[0-9]{10,15}$/,
-              message: "Enter a valid phone number",
-            },
-          })}
-          label="Phone Number"
-          variant="outlined"
-          error={!!errors.phone}
-          helperText={errors.phone?.message}
-        />
+        <Box className="phone-input-container">
+          <TextField
+            select
+            label="Phone Prefix"
+            value={watch("phonePrefix") || ""}
+            onChange={(e) => setValue("phonePrefix", e.target.value)}
+            sx={{ width: "150px" }}
+          >
+            {phoneCountries.map((country) => (
+              <MenuItem key={country.code} value={country.prefix}>
+                {country.prefix} ({country.label})
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            {...register("phone", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^[0-9]{10,15}$/,
+                message: "Enter a valid phone number",
+              },
+            })}
+            label="Phone Number"
+            variant="outlined"
+            error={!!errors.phone}
+            helperText={errors.phone?.message}
+            fullWidth
+          />
+        </Box>
 
         <TextField
           {...register("destination", {

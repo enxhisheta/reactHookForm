@@ -67,3 +67,9 @@ button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   background-color: #f0f8ff;
 }
+
+.phone-input-container {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
