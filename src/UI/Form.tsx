@@ -29,6 +29,7 @@ const Form: React.FC = () => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<BookingInputs>({
     defaultValues: {
@@ -50,6 +51,7 @@ const Form: React.FC = () => {
 
   const onSubmit: SubmitHandler<BookingInputs> = (data) => {
     console.log(data);
+    reset();
   };
 
   const handleFareTypeChange = (fareType: string) => {
