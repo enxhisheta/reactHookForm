@@ -70,6 +70,19 @@ const Form: React.FC = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log(formData);
+      setFormData({
+        name: "",
+        surname: "",
+        email: "",
+        phone: "",
+        destination: "",
+        travelers: 1,
+        date: "",
+        specialRequestsSubject: "",
+        specialRequests: "",
+        agreeToTerms: false,
+        fareType: "regular",
+      });
     }
   };
 
@@ -192,7 +205,9 @@ const Form: React.FC = () => {
         label="Travel Date"
         type="date"
         variant="outlined"
-        InputLabelProps={{ shrink: true }}
+        slotProps={{
+          inputLabel: { shrink: true },
+        }}
         value={formData.date}
         onChange={handleChange}
         error={!!errors.date}

@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Container>
 
       <Box component="footer" className="layout-footer">
-        <Typography>© 2023 My App</Typography>
+        <Typography>© 2024 My Agency</Typography>
       </Box>
     </Box>
   );
