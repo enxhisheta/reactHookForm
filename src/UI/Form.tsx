@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent, ChangeEvent } from "react";
 import {
   TextField,
   Button,
@@ -8,6 +8,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
+import "./Form.css";
 
 type BookingInputs = {
   name: string;
@@ -89,50 +90,25 @@ const Form: React.FC = () => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        maxWidth: 500,
-        mx: "auto",
-        mt: 4,
-      }}
-    >
-      <Typography variant="h5" textAlign="center">
+    <Box component="form" onSubmit={handleSubmit} className="form-container">
+      <Typography variant="h5" className="form-title">
         Book Your Trip
       </Typography>
 
-      <Box display="flex" gap={2} justifyContent="center">
+      <Box className="fare-options-container">
         {[
           { label: "Regular", value: "regular" },
           { label: "Student - Extra discounts/baggage", value: "student" },
-          { label: "Senior Citizen - Up to 20$ off", value: "senior" },
-          { label: "Armed Forces - Up to 20$ off", value: "armedForces" },
-          { label: "Doctor and Nurses - Up to 20$ off", value: "doctorNurses" },
+          { label: "Senior Citizen - Up to $20 off", value: "senior" },
+          { label: "Armed Forces - Up to $20 off", value: "armedForces" },
+          { label: "Doctor and Nurses - Up to $20 off", value: "doctorNurses" },
         ].map((fare) => (
           <Box
             key={fare.value}
             onClick={() => handleFareTypeChange(fare.value)}
-            sx={{
-              cursor: "pointer",
-              border:
-                formData.fareType === fare.value
-                  ? "2px solid #007bff"
-                  : "1px solid #ddd",
-              borderRadius: 2,
-              padding: 3,
-              textAlign: "center",
-              width: 120,
-              boxShadow:
-                formData.fareType === fare.value
-                  ? "0 4px 12px rgba(0,0,0,0.2)"
-                  : "none",
-              backgroundColor:
-                formData.fareType === fare.value ? "#f0f8ff" : "#fff",
-            }}
+            className={`fare-option ${
+              formData.fareType === fare.value ? "fare-option-selected" : ""
+            }`}
           >
             <Typography variant="subtitle1" fontWeight="bold">
               {fare.label.split(" - ")[0]}
@@ -217,9 +193,7 @@ const Form: React.FC = () => {
         label="Travel Date"
         type="date"
         variant="outlined"
-        slotProps={{
-          inputLabel: { shrink: true },
-        }}
+        InputLabelProps={{ shrink: true }}
         value={formData.date}
         onChange={handleChange}
         error={!!errors.date}
@@ -236,7 +210,7 @@ const Form: React.FC = () => {
         onChange={handleChange}
       />
 
-      {formData.specialRequestsSubject.length > 0 ? (
+      {formData.specialRequestsSubject.length > 0 && (
         <TextField
           name="specialRequests"
           label="Special Requests"
@@ -246,7 +220,7 @@ const Form: React.FC = () => {
           value={formData.specialRequests}
           onChange={handleChange}
         />
-      ) : null}
+      )}
 
       <FormControlLabel
         control={
