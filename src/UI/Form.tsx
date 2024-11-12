@@ -11,12 +11,14 @@ import {
 
 type BookingInputs = {
   name: string;
+  surname: string;
   email: string;
   phone: string;
-  passportNumber: string;
+  // passportNumber: string;
   destination: string;
   travelers: number;
   date: string;
+  specialRequestsSubject: string;
   specialRequests: string;
   agreeToTerms: boolean;
 };
@@ -24,12 +26,14 @@ type BookingInputs = {
 const Form: React.FC = () => {
   const [formData, setFormData] = useState<BookingInputs>({
     name: "",
+    surname: "",
     email: "",
     phone: "",
-    passportNumber: "",
+    // passportNumber: "",
     destination: "",
     travelers: 1,
     date: "",
+    specialRequestsSubject: "",
     specialRequests: "",
     agreeToTerms: false,
   });
@@ -40,6 +44,7 @@ const Form: React.FC = () => {
     const newErrors: Partial<BookingInputs> = {};
 
     if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.surname) newErrors.surname = "Surname is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (
@@ -52,8 +57,8 @@ const Form: React.FC = () => {
     } else if (!/^[0-9]{10,15}$/.test(formData.phone)) {
       newErrors.phone = "Enter a valid phone number";
     }
-    if (!formData.passportNumber)
-      newErrors.passportNumber = "Passport number is required";
+    // if (!formData.passportNumber)
+    //   newErrors.passportNumber = "Passport number is required";
     if (!formData.destination)
       newErrors.destination = "Please select a destination";
     if (!formData.date) newErrors.date = "Please select a travel date";
@@ -106,6 +111,16 @@ const Form: React.FC = () => {
       />
 
       <TextField
+        name="surname"
+        label="Surname"
+        variant="outlined"
+        value={formData.surname}
+        onChange={handleChange}
+        error={!!errors.surname}
+        helperText={errors.surname}
+      />
+
+      <TextField
         name="email"
         label="Email"
         variant="outlined"
@@ -125,7 +140,7 @@ const Form: React.FC = () => {
         helperText={errors.phone}
       />
 
-      <TextField
+      {/* <TextField
         name="passportNumber"
         label="Passport Number"
         variant="outlined"
@@ -133,7 +148,7 @@ const Form: React.FC = () => {
         onChange={handleChange}
         error={!!errors.passportNumber}
         helperText={errors.passportNumber}
-      />
+      /> */}
 
       <TextField
         name="destination"
@@ -178,14 +193,30 @@ const Form: React.FC = () => {
       />
 
       <TextField
-        name="specialRequests"
-        label="Special Requests"
+        name="specialRequestsSubject"
+        label="Special Requests Subject"
         variant="outlined"
         multiline
-        rows={3}
-        value={formData.specialRequests}
+        rows={1}
+        value={formData.specialRequestsSubject}
         onChange={handleChange}
       />
+
+      {formData.specialRequestsSubject.length > 0 ? (
+        <>
+          <TextField
+            name="specialRequests"
+            label="Special Requests"
+            variant="outlined"
+            multiline
+            rows={3}
+            value={formData.specialRequests}
+            onChange={handleChange}
+          />
+        </>
+      ) : (
+        <></>
+      )}
 
       <FormControlLabel
         control={
