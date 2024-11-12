@@ -26,6 +26,7 @@ const TripDetails: React.FC<TripDetailsProps> = ({
       label="Destination"
       select
       variant="outlined"
+      defaultValue=""
       error={!!errors.destination}
       helperText={errors.destination?.message}
     >
