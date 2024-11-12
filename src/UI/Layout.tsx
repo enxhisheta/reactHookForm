@@ -11,13 +11,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box className="layout-container">
       <AppBar
         position="static"
-        sx={{ backgroundColor: "rgba(25, 118, 210, 0.7)" }}
+        sx={{ backgroundColor: "rgba(25, 118, 210, 0.6)" }}
       >
         <Toolbar
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            padding: "1.5rem 2rem",
+            padding: "1rem ",
           }}
         >
           <Typography variant="h5">My Agency</Typography>

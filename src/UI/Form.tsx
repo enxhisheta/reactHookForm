@@ -87,7 +87,7 @@ const Form: React.FC = () => {
         <Box className="fare-options-container">
           {[
             { label: "Regular", value: "regular" },
-            { label: "Student - Extra discounts/baggage", value: "student" },
+            { label: "Student - Extra discounts", value: "student" },
             { label: "Senior Citizen - Up to $20 off", value: "senior" },
             { label: "Armed Forces - Up to $20 off", value: "armedForces" },
             {

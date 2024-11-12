@@ -2,7 +2,11 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url("./assets/background.jpg");
+  background-image: url("./assets/background1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 a {
@@ -26,9 +30,9 @@ button {
 }
 
 .layout-footer {
-  padding: 1.5rem 0;
+  padding: 2rem 0;
   text-align: center;
-  background-color: rgba(25, 118, 210, 0.7);
+  background-color: rgba(25, 118, 210, 0.6);
   color: #fff;
 }
 
@@ -55,9 +59,9 @@ button {
   cursor: pointer;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 24px;
+  padding: 12px;
   text-align: center;
-  width: 100px;
+  width: 80px;
   background-color: #fff;
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
