@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
   TextField,
   Button,
@@ -19,94 +19,49 @@ type BookingInputs = {
   date: string;
   specialRequestsSubject: string;
   specialRequests: string;
-  agreeToTerms: boolean | string;
+  agreeToTerms: boolean;
   fareType: string;
 };
 
 const Form: React.FC = () => {
-  const [formData, setFormData] = useState<BookingInputs>({
-    name: "",
-    surname: "",
-    email: "",
-    phone: "",
-    destination: "",
-    travelers: 1,
-    date: "",
-    specialRequestsSubject: "",
-    specialRequests: "",
-    agreeToTerms: false,
-    fareType: "regular",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<BookingInputs>({
+    defaultValues: {
+      name: "",
+      surname: "",
+      email: "",
+      phone: "",
+      destination: "",
+      travelers: 1,
+      date: "",
+      specialRequestsSubject: "",
+      specialRequests: "",
+      agreeToTerms: false,
+      fareType: "regular",
+    },
   });
 
-  const [errors, setErrors] = useState<Partial<BookingInputs>>({});
+  const specialRequestsSubject = watch("specialRequestsSubject");
 
-  const validateForm = () => {
-    const newErrors: Partial<BookingInputs> = {};
-
-    if (!formData.name) {
-      newErrors.name = "Name is required";
-    } else if (formData.name.length < 8) {
-      newErrors.name = "Enter at least 8 characters.";
-    }
-    if (!formData.surname) newErrors.surname = "Surname is required";
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (
-      !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(formData.email)
-    ) {
-      newErrors.email = "Enter a valid email address";
-    }
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^[0-9]{10,15}$/.test(formData.phone)) {
-      newErrors.phone = "Enter a valid phone number";
-    }
-    if (!formData.destination)
-      newErrors.destination = "Please select a destination";
-    if (!formData.date) newErrors.date = "Please select a travel date";
-    if (!formData.agreeToTerms)
-      newErrors.agreeToTerms = "Please agree to the terms and conditions";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log(formData);
-      setFormData({
-        name: "",
-        surname: "",
-        email: "",
-        phone: "",
-        destination: "",
-        travelers: 1,
-        date: "",
-        specialRequestsSubject: "",
-        specialRequests: "",
-        agreeToTerms: "no",
-        fareType: "regular",
-      });
-    }
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (checked ? "yes" : "no") : value,
-    }));
+  const onSubmit: SubmitHandler<BookingInputs> = (data) => {
+    console.log(data);
   };
 
   const handleFareTypeChange = (fareType: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      fareType: fareType,
-    }));
+    setValue("fareType", fareType);
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} className="form-container">
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="form-container"
+    >
       <Typography variant="h5" className="form-title">
         Book Your Trip
       </Typography>
@@ -123,7 +78,7 @@ const Form: React.FC = () => {
             key={fare.value}
             onClick={() => handleFareTypeChange(fare.value)}
             className={`fare-option ${
-              formData.fareType === fare.value ? "fare-option-selected" : ""
+              watch("fareType") === fare.value ? "fare-option-selected" : ""
             }`}
           >
             <Typography variant="subtitle1" fontWeight="bold">
@@ -137,54 +92,62 @@ const Form: React.FC = () => {
       </Box>
 
       <TextField
-        name="name"
+        {...register("name", {
+          required: "Name is required",
+          minLength: { value: 8, message: "Enter at least 8 characters" },
+        })}
         label="Name"
         variant="outlined"
-        value={formData.name}
-        onChange={handleChange}
         error={!!errors.name}
-        helperText={errors.name}
+        helperText={errors.name?.message}
       />
 
       <TextField
-        name="surname"
+        {...register("surname", { required: "Surname is required" })}
         label="Surname"
         variant="outlined"
-        value={formData.surname}
-        onChange={handleChange}
         error={!!errors.surname}
-        helperText={errors.surname}
+        helperText={errors.surname?.message}
       />
 
       <TextField
-        name="email"
+        {...register("email", {
+          required: "Email is required",
+          pattern: {
+            value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+            message: "Enter a valid email address",
+          },
+        })}
         label="Email"
         variant="outlined"
-        value={formData.email}
-        onChange={handleChange}
         error={!!errors.email}
-        helperText={errors.email}
+        helperText={errors.email?.message}
       />
 
       <TextField
-        name="phone"
+        {...register("phone", {
+          required: "Phone number is required",
+          pattern: {
+            value: /^[0-9]{10,15}$/,
+            message: "Enter a valid phone number",
+          },
+        })}
         label="Phone Number"
         variant="outlined"
-        value={formData.phone}
-        onChange={handleChange}
         error={!!errors.phone}
-        helperText={errors.phone}
+        helperText={errors.phone?.message}
       />
 
       <TextField
-        name="destination"
+        {...register("destination", {
+          required: "Please select a destination",
+        })}
         label="Destination"
         select
         variant="outlined"
-        value={formData.destination}
-        onChange={handleChange}
         error={!!errors.destination}
-        helperText={errors.destination}
+        helperText={errors.destination?.message}
+        value={watch("destination") || ""}
       >
         <MenuItem value="cairo">Cairo</MenuItem>
         <MenuItem value="tokyo">Tokyo</MenuItem>
@@ -194,65 +157,57 @@ const Form: React.FC = () => {
       </TextField>
 
       <TextField
-        name="travelers"
+        {...register("travelers", { min: 1 })}
         label="Number of Travelers"
         type="number"
         variant="outlined"
-        value={formData.travelers}
-        onChange={handleChange}
         error={!!errors.travelers}
-        helperText={errors.travelers}
+        helperText={errors.travelers?.message}
       />
 
       <TextField
-        name="date"
+        {...register("date", { required: "Please select a travel date" })}
         label="Travel Date"
         type="date"
         variant="outlined"
         slotProps={{
           inputLabel: { shrink: true },
         }}
-        value={formData.date}
-        onChange={handleChange}
         error={!!errors.date}
-        helperText={errors.date}
+        helperText={errors.date?.message}
       />
 
       <TextField
-        name="specialRequestsSubject"
+        {...register("specialRequestsSubject")}
         label="Special Requests Subject"
         variant="outlined"
         multiline
         rows={1}
-        value={formData.specialRequestsSubject}
-        onChange={handleChange}
       />
 
-      {formData.specialRequestsSubject.length > 0 && (
+      {specialRequestsSubject && (
         <TextField
-          name="specialRequests"
+          {...register("specialRequests")}
           label="Special Requests"
           variant="outlined"
           multiline
           rows={3}
-          value={formData.specialRequests}
-          onChange={handleChange}
         />
       )}
 
       <FormControlLabel
         control={
           <Checkbox
-            name="agreeToTerms"
-            checked={formData.agreeToTerms === "yes"}
-            onChange={handleChange}
+            {...register("agreeToTerms", {
+              required: "Please agree to the terms and conditions",
+            })}
           />
         }
         label="I agree to the terms and conditions"
       />
       {errors.agreeToTerms && (
         <Typography variant="caption" color="error">
-          {errors.agreeToTerms}
+          {errors.agreeToTerms.message}
         </Typography>
       )}
 
