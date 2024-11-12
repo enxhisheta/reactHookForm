@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import {
   TextField,
   Button,
@@ -19,7 +19,7 @@ type BookingInputs = {
   date: string;
   specialRequestsSubject: string;
   specialRequests: string;
-  agreeToTerms: boolean;
+  agreeToTerms: boolean | string;
   fareType: string;
 };
 
@@ -43,7 +43,11 @@ const Form: React.FC = () => {
   const validateForm = () => {
     const newErrors: Partial<BookingInputs> = {};
 
-    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.name) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.length < 8) {
+      newErrors.name = "Enter at least 8 characters.";
+    }
     if (!formData.surname) newErrors.surname = "Surname is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -60,7 +64,8 @@ const Form: React.FC = () => {
     if (!formData.destination)
       newErrors.destination = "Please select a destination";
     if (!formData.date) newErrors.date = "Please select a travel date";
-    if (!formData.agreeToTerms) newErrors.agreeToTerms = false;
+    if (!formData.agreeToTerms)
+      newErrors.agreeToTerms = "Please agree to the terms and conditions";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,17 +85,16 @@ const Form: React.FC = () => {
         date: "",
         specialRequestsSubject: "",
         specialRequests: "",
-        agreeToTerms: false,
+        agreeToTerms: "no",
         fareType: "regular",
       });
     }
   };
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? (checked ? "yes" : "no") : value,
     }));
   };
 
@@ -240,7 +244,7 @@ const Form: React.FC = () => {
         control={
           <Checkbox
             name="agreeToTerms"
-            checked={formData.agreeToTerms}
+            checked={formData.agreeToTerms === "yes"}
             onChange={handleChange}
           />
         }
