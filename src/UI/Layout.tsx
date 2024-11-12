@@ -9,10 +9,19 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <Box className="layout-container">
-      <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>My Agency</Typography>
-          <MenuIcon />
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: "rgba(25, 118, 210, 0.7)" }}
+      >
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "1.5rem 2rem",
+          }}
+        >
+          <Typography variant="h5">My Agency</Typography>
+          <MenuIcon sx={{ fontSize: 30 }} />
         </Toolbar>
       </AppBar>
 
