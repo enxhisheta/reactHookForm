@@ -14,13 +14,13 @@ type BookingInputs = {
   surname: string;
   email: string;
   phone: string;
-  // passportNumber: string;
   destination: string;
   travelers: number;
   date: string;
   specialRequestsSubject: string;
   specialRequests: string;
   agreeToTerms: boolean;
+  fareType: string;
 };
 
 const Form: React.FC = () => {
@@ -29,13 +29,13 @@ const Form: React.FC = () => {
     surname: "",
     email: "",
     phone: "",
-    // passportNumber: "",
     destination: "",
     travelers: 1,
     date: "",
     specialRequestsSubject: "",
     specialRequests: "",
     agreeToTerms: false,
+    fareType: "regular",
   });
 
   const [errors, setErrors] = useState<Partial<BookingInputs>>({});
@@ -57,8 +57,6 @@ const Form: React.FC = () => {
     } else if (!/^[0-9]{10,15}$/.test(formData.phone)) {
       newErrors.phone = "Enter a valid phone number";
     }
-    // if (!formData.passportNumber)
-    //   newErrors.passportNumber = "Passport number is required";
     if (!formData.destination)
       newErrors.destination = "Please select a destination";
     if (!formData.date) newErrors.date = "Please select a travel date";
@@ -83,6 +81,13 @@ const Form: React.FC = () => {
     }));
   };
 
+  const handleFareTypeChange = (fareType: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      fareType: fareType,
+    }));
+  };
+
   return (
     <Box
       component="form"
@@ -99,6 +104,45 @@ const Form: React.FC = () => {
       <Typography variant="h5" textAlign="center">
         Book Your Trip
       </Typography>
+
+      <Box display="flex" gap={2} justifyContent="center">
+        {[
+          { label: "Regular", value: "regular" },
+          { label: "Student - Extra discounts/baggage", value: "student" },
+          { label: "Senior Citizen - Up to 20$ off", value: "senior" },
+          { label: "Armed Forces - Up to 20$ off", value: "armedForces" },
+          { label: "Doctor and Nurses - Up to 20$ off", value: "doctorNurses" },
+        ].map((fare) => (
+          <Box
+            key={fare.value}
+            onClick={() => handleFareTypeChange(fare.value)}
+            sx={{
+              cursor: "pointer",
+              border:
+                formData.fareType === fare.value
+                  ? "2px solid #007bff"
+                  : "1px solid #ddd",
+              borderRadius: 2,
+              padding: 3,
+              textAlign: "center",
+              width: 120,
+              boxShadow:
+                formData.fareType === fare.value
+                  ? "0 4px 12px rgba(0,0,0,0.2)"
+                  : "none",
+              backgroundColor:
+                formData.fareType === fare.value ? "#f0f8ff" : "#fff",
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight="bold">
+              {fare.label.split(" - ")[0]}
+            </Typography>
+            <Typography variant="caption">
+              {fare.label.split(" - ")[1]}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
 
       <TextField
         name="name"
@@ -139,16 +183,6 @@ const Form: React.FC = () => {
         error={!!errors.phone}
         helperText={errors.phone}
       />
-
-      {/* <TextField
-        name="passportNumber"
-        label="Passport Number"
-        variant="outlined"
-        value={formData.passportNumber}
-        onChange={handleChange}
-        error={!!errors.passportNumber}
-        helperText={errors.passportNumber}
-      /> */}
 
       <TextField
         name="destination"
@@ -203,20 +237,16 @@ const Form: React.FC = () => {
       />
 
       {formData.specialRequestsSubject.length > 0 ? (
-        <>
-          <TextField
-            name="specialRequests"
-            label="Special Requests"
-            variant="outlined"
-            multiline
-            rows={3}
-            value={formData.specialRequests}
-            onChange={handleChange}
-          />
-        </>
-      ) : (
-        <></>
-      )}
+        <TextField
+          name="specialRequests"
+          label="Special Requests"
+          variant="outlined"
+          multiline
+          rows={3}
+          value={formData.specialRequests}
+          onChange={handleChange}
+        />
+      ) : null}
 
       <FormControlLabel
         control={
