@@ -8,7 +8,6 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import "./Form.css";
 
 type BookingInputs = {
   name: string;
