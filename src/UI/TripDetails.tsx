@@ -21,21 +21,29 @@ const TripDetails: React.FC<TripDetailsProps> = ({
   control,
 }) => (
   <>
-    <TextField
-      {...register("destination", { required: "Please select a destination" })}
-      label="Destination"
-      select
-      variant="outlined"
+    <Controller
+      name="destination"
+      control={control}
+      rules={{ required: "Please select a destination" }}
       defaultValue=""
-      error={!!errors.destination}
-      helperText={errors.destination?.message}
-    >
-      <MenuItem value="cairo">Cairo</MenuItem>
-      <MenuItem value="tokyo">Tokyo</MenuItem>
-      <MenuItem value="new_york">New York</MenuItem>
-      <MenuItem value="sydney">Sydney</MenuItem>
-      <MenuItem value="san_francisco">San Francisco</MenuItem>
-    </TextField>
+      render={({ field }) => (
+        <TextField
+          {...field}
+          select
+          label="Destination"
+          variant="outlined"
+          error={!!errors.destination}
+          helperText={errors.destination?.message}
+        >
+          <MenuItem value="">Select a destination</MenuItem>
+          <MenuItem value="cairo">Cairo</MenuItem>
+          <MenuItem value="tokyo">Tokyo</MenuItem>
+          <MenuItem value="new_york">New York</MenuItem>
+          <MenuItem value="sydney">Sydney</MenuItem>
+          <MenuItem value="san_francisco">San Francisco</MenuItem>
+        </TextField>
+      )}
+    />
 
     <TextField
       {...register("travelers", { min: 1 })}
